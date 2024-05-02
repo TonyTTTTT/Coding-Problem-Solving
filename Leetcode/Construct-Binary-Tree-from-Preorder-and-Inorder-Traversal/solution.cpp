@@ -6,23 +6,21 @@ using namespace std;
 
 class Solution {
 public:
-    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-        if (preorder.empty() && inorder.empty()) return nullptr;
+    TreeNode* buildTree(auto preorderS, auto inorderS, auto inorderE) {
+        if (inorderS==inorderE) return nullptr;
 
-        TreeNode* root = new TreeNode(preorder[0]);
+        TreeNode* root = new TreeNode(*preorderS);
 
-        auto it = find(inorder.begin(), inorder.end(), preorder[0]);
-        int rootIdx = it - inorder.begin();
+        auto it = find(inorderS, inorderE, *preorderS);
+        int rootIdx = it - inorderS;
 
-        vector<int> preorderLeft{preorder.begin()+1, preorder.begin()+1+rootIdx};
-        vector<int> inorderLeft{inorder.begin(), inorder.begin()+rootIdx};
-        vector<int> preorderRight{preorder.begin()+1+rootIdx, preorder.end()};
-        vector<int> inorderRight{inorder.begin()+rootIdx+1, inorder.end()};
-
-        root->left = buildTree(preorderLeft, inorderLeft);
-        root->right = buildTree(preorderRight, inorderRight);
+        root->left = buildTree(preorderS+1, inorderS, inorderS+rootIdx);
+        root->right = buildTree(preorderS+1+rootIdx, inorderS+rootIdx+1, inorderE);
 
         return root;
+    }
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        return buildTree(preorder.begin(), inorder.begin(), inorder.end());
     }
 };
 
