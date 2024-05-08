@@ -6,41 +6,22 @@ class Solution {
 public:
     vector<int> spiralOrder(vector<vector<int>>& matrix) {
         vector<int> ans;
+        vector<vector<int>> dirVec = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
         int m = matrix.size(), n = matrix[0].size();
-        int r = 0, c = 0;
+        int r = 0, c = -1;
 
-        while (ans.size() != m*n) {
-            while (c < n && matrix[r][c] != 101) {
-                ans.push_back(matrix[r][c]);
-                matrix[r][c] = 101;
-                c++;
-            }
-            c--;
-            r++;
+        vector<int> step = {n, m-1};
+        int dir = 0;
 
-            while (r < m && matrix[r][c] != 101) {
-                ans.push_back(matrix[r][c]);
-                matrix[r][c] = 101;
-                r++;
-            }
-            r--;
-            c--;
+        while (step[dir%2] > 0) {
+           for (int i=1; i <= step[dir%2]; i++) {
+                r += dirVec[dir][0];
+                c += dirVec[dir][1];
 
-            while (c >= 0 && matrix[r][c] != 101) {
                 ans.push_back(matrix[r][c]);
-                matrix[r][c] = 101;
-                c--;
-            }
-            c++;
-            r--;
-
-            while (r >= 0 && matrix[r][c] != 101) {
-                ans.push_back(matrix[r][c]);
-                matrix[r][c] = 101;
-                r--;
-            }
-            r++;
-            c++;
+           }
+           step[dir%2]--;
+           dir = (dir+1) % 4;
         }
 
         return ans;
