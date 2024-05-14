@@ -3,10 +3,10 @@
 
 class Solution {
 public:
-    void reorderList(ListNode* head) {
-        ListNode* tail = head;
-        ListNode* current = head;
-        ListNode* sub_tail;
+    void reorderList(MyListNode* head) {
+        MyListNode* tail = head;
+        MyListNode* current = head;
+        MyListNode* sub_tail;
 
         while (tail->next != nullptr) {
             sub_tail = tail;
@@ -30,7 +30,7 @@ public:
 
 int main() {
     Solution solution;
-    ListNode* head = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))));
+    MyListNode* head = new MyListNode(1, new MyListNode(2, new MyListNode(3, new MyListNode(4, new MyListNode(5)))));
     
     solution.reorderList(head);
     __asm("nop");

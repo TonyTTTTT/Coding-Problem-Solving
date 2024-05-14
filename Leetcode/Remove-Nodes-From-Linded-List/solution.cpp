@@ -4,7 +4,7 @@ using namespace std;
 
 class Solution {
 public:
-    ListNode* removeNodes(ListNode* head) {
+    MyListNode* removeNodes(MyListNode* head) {
         if (head->next == nullptr) return head;
 
         head->next = removeNodes(head->next);
@@ -15,8 +15,8 @@ public:
 
 int main() {
     Solution solution;
-    ListNode* head = new ListNode(5, new ListNode(2, new ListNode(13, new ListNode(3, new ListNode(8)))));
+    MyListNode* head = new MyListNode(5, new MyListNode(2, new MyListNode(13, new MyListNode(3, new MyListNode(8)))));
 
-    ListNode* ans = solution.removeNodes(head);
+    MyListNode* ans = solution.removeNodes(head);
     __asm("nop");
 }
