@@ -6,7 +6,7 @@ public:
     int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
         int sum = 0;
         int startSum = 0;
-        int start = -1;
+        int start = 0;
 
         for (int i=0; i<gas.size(); i++) {
             int remain = gas[i] - cost[i];
