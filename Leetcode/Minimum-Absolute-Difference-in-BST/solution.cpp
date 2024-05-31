@@ -6,7 +6,6 @@ using namespace std;
 
 class Solution {
 public:
-    int smallest = -5000;
     void inOrder(TreeNode* root, int& ans, int& last) {
         if (!root) return;
 
