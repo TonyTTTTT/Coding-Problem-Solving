@@ -6,67 +6,36 @@ using namespace std;
 
 class Solution {
 public:
-    bool diffuse(vector<vector<char>>& board, vector<pair<int, int>>& region, int i, int j) {
+    void diffuse(vector<vector<char>>& board, int i, int j) {
         if (i<0 || i==board.size() || j<0 || j==board[0].size() || \
-            board[i][j] != 'O') return false;
+            board[i][j] != 'O') return;
 
-        region.push_back({i, j});
         board[i][j] = 'S';
 
-        bool reachBorder = diffuse(board, region, i+1, j);
-        reachBorder = diffuse(board, region, i-1, j) || reachBorder;
-        reachBorder = diffuse(board, region, i, j+1) || reachBorder;
-        reachBorder = diffuse(board, region, i, j-1) || reachBorder;
-
-        reachBorder = reachBorder || i==0 || i==board.size()-1 || j==0 || j==board[0].size()-1;
-
-        return reachBorder;
+        diffuse(board, i+1, j);
+        diffuse(board, i-1, j);
+        diffuse(board, i, j+1);
+        diffuse(board, i, j-1);
     }
 
     void solve(vector<vector<char>>& board) {
         int m = board.size();
         int n = board[0].size();
-        vector<int> step = {n, m-1};
-        vector<vector<int>> action = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-        int cnt = 0;
-        int r=0, c=-1;
-        vector<vector<bool>> canReachBorder(m, vector(n, false));
-
-
-        while (step[cnt%2]) {
-            for (int i=0; i<step[cnt%2]; i++) {
-                r += action[cnt%4][0];
-                c += action[cnt%4][1];
-
-                canReachBorder[r][c] = board[r][c] == 'O' && ( r-1<0 || r+1==m || c-1<0 || c+1==n ||\
-                 canReachBorder[r-1][c] ||  canReachBorder[r+1][c] ||\
-                  canReachBorder[r][c-1] || canReachBorder[r][c+1]);
-            }
-            step[cnt%2]--;
-            cnt++;
-        }
-
-
-        r = -1, c = 0;
-        cnt = 0;
-        action = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
-        step = {m, n-1};
-        while (step[cnt%2]) {
-            for (int i=0; i<step[cnt%2]; i++) {
-                r += action[cnt%4][0];
-                c += action[cnt%4][1];
-
-                canReachBorder[r][c] = board[r][c] == 'O' && ( r-1<0 || r+1==m || c-1<0 || c+1==n ||\
-                 canReachBorder[r-1][c] ||  canReachBorder[r+1][c] ||\
-                  canReachBorder[r][c-1] || canReachBorder[r][c+1]);
-            }
-            step[cnt%2]--;
-            cnt++;
-        }
 
         for (int i=0; i<m; i++) {
-            for (int j=0; j<n; j++) {
-                if (!canReachBorder[i][j]) board[i][j] = 'X';
+            if (board[i][0] == 'O') diffuse(board, i, 0);
+            if (board[i][n-1] == 'O') diffuse(board, i, n-1);
+        }
+
+        for (int j=0; j<n; j++) {
+            if (board[0][j] == 'O') diffuse(board, 0, j);
+            if (board[m-1][j] == 'O') diffuse(board, m-1, j);
+        }
+
+        for (int i=0; i<board.size(); i++) {
+            for (int j=0; j<board[0].size(); j++) {
+                if (board[i][j] == 'O') board[i][j] = 'X';
+                else if (board[i][j] == 'S') board[i][j] = 'O';
             }
         }
 
@@ -76,9 +45,9 @@ public:
 int main() {
     Solution solution;
     vector<vector<char>> board = {
-        // {'X','X','X','X'},{'X','O','O','X'},{'X','X','O','X'},{'X','O','X','X'}
+        {'X','X','X','X'},{'X','O','O','X'},{'X','X','O','X'},{'X','O','X','X'}
         // {'X'}
-        {'O'}
+        // {'O'}
         // {'O','O','O','O','X','X'},{'O','O','O','O','O','O'},{'O','X','O','X','O','O'},{'O','X','O','O','X','O'},{'O','X','O','X','O','O'},{'O','X','O','O','O','O'}
         // {'O','O','O','O','X','X'},{'O','O','O','O','O','O'},{'O','X','O','X','O','O'},{'O','X','O','O','X','O'},{'O','X','O','X','O','O'},{'O','X','O','O','O','O'}
         // {'X','O','X','O','X','O'},{'O','X','O','X','O','X'},{'X','O','X','O','X','O'},{'O','X','O','X','O','X'}
