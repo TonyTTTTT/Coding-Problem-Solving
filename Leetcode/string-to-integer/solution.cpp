@@ -33,7 +33,7 @@ public:
             // Check overflow and underflow conditions. 
             if ((result > INT_MAX / 10) || (result == INT_MAX / 10 && digit > INT_MAX % 10)) { 
                 // If integer overflowed return 2^31-1, otherwise if underflowed return -2^31.    
-                return sign == 1 ? INT_MAX : INT_MIN;
+                return sign == 1 ? INT_MAX : smallest;
             }
             
             // Append current digit to the result.

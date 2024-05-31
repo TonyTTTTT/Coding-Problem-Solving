@@ -6,7 +6,7 @@ class Solution {
 public:
     int maxSubArray(vector<int>& nums) {
         int curSum = 0;
-        int ans = INT_MIN;
+        int ans = smallest;
 
         for (int i=0; i<nums.size(); i++) {
             curSum += nums[i];
