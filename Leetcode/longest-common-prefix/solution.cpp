@@ -23,7 +23,7 @@ public:
 
 int main () {
     Solution solution;
-    vector<string> strs = {"dog","racecar","car"};
+    vector<string> strs = {"racecar","race","racec"};
     string ans = solution.longestCommonPrefix(strs);
     cout<<ans<<endl;
     return 0;
