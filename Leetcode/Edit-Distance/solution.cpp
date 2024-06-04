@@ -4,69 +4,69 @@ using namespace std;
 
 // class Solution {
 // public:
-//     // int minDistance(string word1, string word2) {
-//     //     vector<vector<int>> dp(word1.size()+1, vector<int>(word2.size()+1));
-//     //     vector<bool> t(word2.size()+1, 0);
+// //     // int minDistance(string word1, string word2) {
+// //     //     vector<vector<int>> dp(word1.size()+1, vector<int>(word2.size()+1));
+// //     //     vector<bool> t(word2.size()+1, 0);
 
-//     //     dp[0][0] = 0;
-//     //     for (int i=1; i<=word1.size(); i++) dp[i][0] = i-1;
-//     //     for (int j=1; j<=word2.size(); j++) dp[0][j] = j-1;
+// //     //     dp[0][0] = 0;
+// //     //     for (int i=1; i<=word1.size(); i++) dp[i][0] = i-1;
+// //     //     for (int j=1; j<=word2.size(); j++) dp[0][j] = j-1;
 
-//     //     for (int i=1; i<=word1.size(); i++) {
-//     //         for (int j=1; j<=word2.size(); j++) {
-//     //             int a = dp[i-1][j];
-//     //             if (t[j]) a++;
-//     //             if (word1[i-1] == word2[j-1]) {
-//     //                 dp[i][j] = min(a, dp[i-1][j-1]);
-//     //                 if (dp[i][j] == dp[i-1][j-1]) t[j] = true;
-//     //             } else { // word1[i-1] != word2[j-1]
-//     //                 dp[i][j] = min(dp[i][j-1]+1, a);
-//     //             }
-//     //         }
-//     //     }
+// //     //     for (int i=1; i<=word1.size(); i++) {
+// //     //         for (int j=1; j<=word2.size(); j++) {
+// //     //             int a = dp[i-1][j];
+// //     //             if (t[j]) a++;
+// //     //             if (word1[i-1] == word2[j-1]) {
+// //     //                 dp[i][j] = min(a, dp[i-1][j-1]);
+// //     //                 if (dp[i][j] == dp[i-1][j-1]) t[j] = true;
+// //     //             } else { // word1[i-1] != word2[j-1]
+// //     //                 dp[i][j] = min(dp[i][j-1]+1, a);
+// //     //             }
+// //     //         }
+// //     //     }
 
-//     //     return dp[word1.size()][word2.size()];
-//     // }
-//     // int recursive(string& word1, string& word2, int n1, int n2) {
-//     //     if (n1 == 0) return n2;
-//     //     if (n2 == 0) return n1;
+// //     //     return dp[word1.size()][word2.size()];
+// //     // }
+// //     // int recursive(string& word1, string& word2, int n1, int n2) {
+// //     //     if (n1 == 0) return n2;
+// //     //     if (n2 == 0) return n1;
         
-//     //     int ans = min(recursive(word1, word2, n1-1, n2)+1, recursive(word1, word2, n1, n2-1)+1);
+// //     //     int ans = min(recursive(word1, word2, n1-1, n2)+1, recursive(word1, word2, n1, n2-1)+1);
 
-//     //     if (word1[n1-1] == word2[n2-1]) ans = min(recursive(word1, word2, n1-1, n2-1), ans);
+// //     //     if (word1[n1-1] == word2[n2-1]) ans = min(recursive(word1, word2, n1-1, n2-1), ans);
 
-//     //     return ans;
-//     // }
+// //     //     return ans;
+// //     // }
 
-//     // int minDistance(string word1, string word2) {
-//     //     return recursive(word1, word2, word1.size(), word2.size());
-//     // }
+// //     // int minDistance(string word1, string word2) {
+// //     //     return recursive(word1, word2, word1.size(), word2.size());
+// //     // }
 
-//     vector<vector<pair<int, int>>> findValidPairs(vector<pair<int, int>>& pairs, int curPairIdx, int idx1, int idx2, vector<vector<vector<pair<int, int>>>>& mem){
-//         if (curPairIdx == pairs.size()-1) {
-//             if (pairs[curPairIdx].first > idx1 && pairs[curPairIdx].second > idx2) return {{pairs[curPairIdx]}};
-//             else return {{}};
-//         }
+// //     vector<vector<pair<int, int>>> findValidPairs(vector<pair<int, int>>& pairs, int curPairIdx, int idx1, int idx2, vector<vector<vector<pair<int, int>>>>& mem){
+// //         if (curPairIdx == pairs.size()-1) {
+// //             if (pairs[curPairIdx].first > idx1 && pairs[curPairIdx].second > idx2) return {{pairs[curPairIdx]}};
+// //             else return {{}};
+// //         }
 
         
-//         vector<vector<pair<int, int>>> res;
-//         if (pairs[curPairIdx].first > idx1 && pairs[curPairIdx].second > idx2) {
-//             if (mem[curPairIdx].empty()) {
-//                 mem[curPairIdx] = findValidPairs(pairs, curPairIdx+1, pairs[curPairIdx].first, pairs[curPairIdx].second, mem);
+// //         vector<vector<pair<int, int>>> res;
+// //         if (pairs[curPairIdx].first > idx1 && pairs[curPairIdx].second > idx2) {
+// //             if (mem[curPairIdx].empty()) {
+// //                 mem[curPairIdx] = findValidPairs(pairs, curPairIdx+1, pairs[curPairIdx].first, pairs[curPairIdx].second, mem);
         
-//                 for (int i=0; i<mem[curPairIdx].size(); i++) {
-//                     mem[curPairIdx][i].push_back(pairs[curPairIdx]);
-//                 }   
-//             }
+// //                 for (int i=0; i<mem[curPairIdx].size(); i++) {
+// //                     mem[curPairIdx][i].push_back(pairs[curPairIdx]);
+// //                 }   
+// //             }
 
-//             res = mem[curPairIdx];
-//         }
+// //             res = mem[curPairIdx];
+// //         }
 
-//         vector<vector<pair<int, int>>> noCur = findValidPairs(pairs, curPairIdx+1, idx1, idx2, mem);
-//         res.insert(res.end(), noCur.begin(), noCur.end());
+// //         vector<vector<pair<int, int>>> noCur = findValidPairs(pairs, curPairIdx+1, idx1, idx2, mem);
+// //         res.insert(res.end(), noCur.begin(), noCur.end());
 
-//         return res;
-//     }
+// //         return res;
+// //     }
 
 //     int minDistance(string word1, string word2) {
 //         if (word1.empty() || word2.empty()) return max(word1.size(), word2.size());
@@ -88,11 +88,11 @@ using namespace std;
 
 //         for (int i=1; i<pairs.size(); i++) {
 //             for (int j=0; j<dp[i-1].size(); j++) {
-//                 int lastPairIdx = dp[i-1][j].back();
+//                 int lastPairIdx = dp[i-1][j][dp[i-1][j].size()-1];
 //                 for (int k=lastPairIdx+1; k<dp[0].size(); k++) {
 //                     if (pairs[k].first > pairs[lastPairIdx].first && pairs[k].second > pairs[lastPairIdx].second) {
 //                         dp[i].push_back(dp[i-1][j]);
-//                         dp[i].back().push_back(k);
+//                         dp[i][dp[i].size()-1].push_back(k);
 //                     }
 //                 }
 //             }
