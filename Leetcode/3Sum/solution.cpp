@@ -9,17 +9,17 @@ class Solution {
 public:
     vector<vector<int>> threeSum(vector<int>& nums) {
         int i, j, k, sum;
-        set<vector<int>> ans_set;
         vector<vector<int>> ans;
         sort(nums.begin(), nums.end());
 
         for (i=0; i<nums.size(); i++) {
+            if (i>0 and nums[i]==nums[i-1]) continue;
             j = i+1;
             k = nums.size()-1;
             while (j < k) {
                 sum = nums[i] + nums[j] + nums[k];
                 if (sum == 0) {
-                    ans_set.insert({nums[i], nums[j], nums[k]});
+                    ans.push_back({nums[i], nums[j], nums[k]});
                     while (j < k and nums[j+1] == nums[j]) {
                         j++;
                     }
@@ -34,11 +34,6 @@ public:
                     j++;
                 }
             }
-        }
-
-        set<vector<int>>::iterator itr;
-        for (itr=ans_set.begin(); itr!=ans_set.end(); itr++) {
-            ans.push_back(*itr);
         }
         
         return ans;
