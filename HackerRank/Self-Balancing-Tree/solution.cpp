@@ -13,117 +13,113 @@ typedef struct node
     node(int x, int y, node* l, node* r) : val(x), ht(y), left(l), right(r) {};
 } node;
 
-
-node* adjust(node* root, node* violateRoot) {
-    int leftHt = violateRoot->left ? violateRoot->left->ht : -1;
-    int rightHt = violateRoot->right ? violateRoot->right->ht : -1;
-    node* mid = leftHt > rightHt ? violateRoot->left : violateRoot->right;
-
-    leftHt = mid->left ? mid->left->ht : -1;
-    rightHt = mid->right ? mid->right->ht : -1;
-    node* third = leftHt > rightHt ? mid->left : mid->right;
-
-    if (third->val > mid->val && mid->val < violateRoot->val) {
-        violateRoot->left = third;
-        mid->right = third->left;
-        third->left = mid;
-
-        swap(mid, third);
-    } else if (third->val < mid->val && mid->val > violateRoot->val) {
-        violateRoot->right = third;
-        mid->left = third->right;
-        third->right = mid;
-
-        swap(mid, third);
-    }
-
-    if (mid->val < violateRoot->val) {
-        violateRoot->left = mid->right;
-        mid->right = violateRoot;
-
-        swap(violateRoot, mid);
-    } else if (mid->val > violateRoot->val) {
-        violateRoot->right = mid->left;
-        mid->left = violateRoot;
-
-        swap(violateRoot, mid);
-    }
-
-    return violateRoot;
-}
-
-int adjustHt(node* root) {
-    if (!root) return -1;
-
-    root->ht = 1 + max(adjustHt(root->left), adjustHt(root->right));
-
-    return root->ht;
-}
-
-node* findViolateRoot(node* root) {
-    if (!root) return nullptr;
-
-    node* leftViolateRoot = findViolateRoot(root->left);
-    if (leftViolateRoot) return leftViolateRoot;
-
-    node* rightViolateRoot = findViolateRoot(root->right);
-    if (rightViolateRoot) return rightViolateRoot;
-
-    int leftHt = root->left ? root->left->ht : -1;
-    int rightHt = root->right ? root->right->ht : -1;
-
-    return abs(leftHt - rightHt) > 1 ? root : nullptr;
-}
-
-node* insert(node* root,int val)
-{
-	node *prev=nullptr, *cur = root;
+class AVLTree {
+    node* root;
     
-    while (cur) {
-        prev = cur;
-        if (val < cur->val) cur = cur->left;
-        else cur = cur->right;
+    void adjustHt(node* cur) {
+        int leftHt = cur->left ? cur->left->ht : -1;
+        int rightHt = cur->right ? cur->right->ht : -1;
+
+        cur->ht = max(leftHt, rightHt) + 1;
     }
-    node* newNode = new node();
-    newNode->val = val;
-    if (val < prev->val) {
-        prev->left = newNode;
+
+    node* leftRotate(node* cur) {
+        node* tmp = cur->right;
+        cur->right = tmp->left;
+        tmp->left = cur;
+
+        adjustHt(cur);
+        adjustHt(tmp);
+
+        return tmp;
     }
-    else prev->right = newNode;
 
-    adjustHt(root);
+    node* rightRotate(node* cur) {
+        node* tmp = cur->left;
+        cur->left = tmp->right;
+        tmp->right = cur;
 
-    node* violateRoot = findViolateRoot(root);
+        adjustHt(cur);
+        adjustHt(tmp);
 
-    while(violateRoot) {
-        node* violateRootParent = nullptr;
-        cur = root;
-        while (cur != violateRoot) {
-            violateRootParent =cur;
-            if (violateRoot->val > cur->val) cur = cur->right;
-            else cur = cur->left;
-        } 
+        return tmp;
+    }
 
-        violateRoot = adjust(root, violateRoot);
-
-        if (!violateRootParent) root = violateRoot;
-        else {
-            if (violateRoot->val < violateRootParent->val) violateRootParent->left = violateRoot;
-            else violateRootParent->right = violateRoot;
+    node* insert(int val, node* cur) {
+        if (!cur) {
+            node* newNode = new node();
+            newNode->val = val;
+            newNode->ht = 0;
+            return newNode;
         }
         
-        adjustHt(root);
+        if (val > cur->val) {
+            cur->right = insert(val, cur->right);
+            cur->ht = max(cur->ht, cur->right->ht + 1);
+        } else  {
+            cur->left = insert(val, cur->left);
+            cur->ht = max(cur->ht, cur->left->ht + 1);
+        }
 
-        violateRoot = findViolateRoot(root);        
+        int leftHt = cur->left ? cur->left->ht : -1;
+        int rightHt = cur->right ? cur->right->ht : -1;
+        int htDiff = leftHt - rightHt;
+        bool rootChange = false;
+
+        if (abs(htDiff) > 1) {
+            if (cur == this->root) rootChange = true;
+
+            if (htDiff > 0) { // left-X case
+                leftHt = cur->left->left ? cur->left->left->ht : -1;
+                rightHt = cur->left->right ? cur->left->right->ht : -1;
+                if (leftHt < rightHt) { // left-right case
+                    cur->left = leftRotate(cur->left);
+                }
+                cur = rightRotate(cur);
+            } else { // right-X case
+                leftHt = cur->right->left ? cur->right->left->ht : -1;
+                rightHt = cur->right->right ? cur->right->right->ht : -1;
+                if (leftHt > rightHt) { // right-left case
+                    cur->right = rightRotate(cur->right);
+                }
+                cur = leftRotate(cur);
+            }
+            
+        }
+
+        this->root = cur;
+        return cur;
     }
 
-    return root;
+public:
+    AVLTree(node* root) {
+        this->root = root;
+    } 
+
+    void insert(int val) {
+        insert(val, this->root);
+    }
+
+    node* getRoot() {
+        return this->root;
+    }
+};
+
+node* insert(node* root,int val) {
+    AVLTree* avltree = new AVLTree(root);
+    avltree->insert(val);
+    
+    return avltree->getRoot();
 }
 
-int main() {
-    node* root = new node(14, 3, new node(10, 1, new node(7, 0), new node(12, 0)), new node(25, 2, new node(21 ,1, new node(16, 0), new node(23, 0)), new node (26, 1, nullptr, new node(30, 0))));
 
-    root = insert(root, 19);
+
+int main() {
+    // node* root = new node(14, 3, new node(10, 1, new node(7, 0), new node(12, 0)), new node(25, 2, new node(21 ,1, new node(16, 0), new node(23, 0)), new node (26, 1, nullptr, new node(30, 0))));
+
+    // root = insert(root, 19);
+    node *root = new node(17, 3, new node(6, 2, nullptr, new node(10, 1, nullptr, new node(16, 0))), new node(18, 1, nullptr, new node(22, 0)));
+    root = insert(root, 21);
 
     return 0;
 }
