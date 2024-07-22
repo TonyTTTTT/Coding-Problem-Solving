@@ -126,10 +126,20 @@ using namespace std;
 
 class Solution {
 public:
-    void findValidPairs(vector<pair<int, int>>& pairs, int curPairIdx, int idx1, int idx2, vector<vector<pair<int, int>>>& validPairs, vector<pair<int, int>>& curPath, int& curLCSLen){
+    void findValidPairs(vector<pair<int, int>>& pairs, int curPairIdx, int idx1, int idx2, vector<pair<int, int>>& curPath, int& curLCSLen, int word1Size, int word2Size, int& ans){
         if (curPairIdx >= pairs.size()) {
-            if (curPath.size() > 0 && (validPairs.size()==0 || curPath.size() >= curLCSLen-1))
-                validPairs.push_back(curPath);
+            if (curPath.size() > 0 && curPath.size() >= max(0, curLCSLen-1)) {
+                // validPairs.push_back(curPath);
+
+                int pathLen = curPath.size();
+                int curDis = max(curPath[0].first, curPath[0].second);
+                for (int j=1; j<pathLen; j++) {
+                    curDis += max(curPath[j].first-curPath[j-1].first-1, curPath[j].second-curPath[j-1].second-1);
+                }
+                curDis += max(word1Size-1-curPath[pathLen-1].first, word2Size-1-curPath[pathLen-1].second);
+
+                ans = min(ans, curDis);
+            }
             
             if (curPath.size() > curLCSLen) curLCSLen = curPath.size();
             return;
@@ -137,10 +147,10 @@ public:
 
         if (pairs[curPairIdx].first > idx1 && pairs[curPairIdx].second > idx2) {
             curPath.push_back(pairs[curPairIdx]);
-            findValidPairs(pairs, curPairIdx+1, pairs[curPairIdx].first, pairs[curPairIdx].second, validPairs, curPath, curLCSLen);
+            findValidPairs(pairs, curPairIdx+1, pairs[curPairIdx].first, pairs[curPairIdx].second, curPath, curLCSLen, word1Size, word2Size, ans);
             curPath.pop_back();
         }
-        findValidPairs(pairs, curPairIdx+1, idx1, idx2, validPairs, curPath, curLCSLen);
+        findValidPairs(pairs, curPairIdx+1, idx1, idx2, curPath, curLCSLen, word1Size, word2Size, ans);
     }
 
     int minDistance(string word1, string word2) {
@@ -154,29 +164,46 @@ public:
             }
         }
 
-        vector<vector<pair<int, int>>> validPairs;
+        // vector<vector<pair<int, int>>> validPairs;
         vector<pair<int, int>> curPath;
         int curLCSLen = 0;
-
-        findValidPairs(pairs, 0, -1, -1, validPairs, curPath, curLCSLen);
-
-        if (validPairs.empty()) return max(word1.size(), word2.size());
-
-        int LCSLen = validPairs[validPairs.size()-1].size();
         int ans = INT_MAX;
-        int curDis;
 
-        for (int i=validPairs.size()-1; i>=0; i--) {
-            int pathLen = validPairs[i].size();
-            if (pathLen < LCSLen-1) break;
-            curDis = max(validPairs[i][0].first, validPairs[i][0].second);
-            for (int j=1; j<pathLen; j++) {
-                curDis += max(validPairs[i][j].first-validPairs[i][j-1].first-1, validPairs[i][j].second-validPairs[i][j-1].second-1);
-            }
-            curDis += max(word1.size()-1-validPairs[i][pathLen-1].first, word2.size()-1-validPairs[i][pathLen-1].second);
+        // for (int i=0; i<pairs.size(); i++) {
+        //     int curDis = max(pairs[i].first, pairs[i].second);
+        //     int word1Idx = pairs[i].first;
+        //     int word2Idx = pairs[i].second;
 
-            if (curDis < ans) ans = curDis;
-        }
+        //     for (int j=i+1; j<pairs.size(); j++) {
+        //         if (pairs[j].first > word1Idx && pairs[j].second > word2Idx) {
+        //             curDis += max(pairs[j].first-word1Idx-1, pairs[j].second-word2Idx-1);
+        //             word1Idx = pairs[j].first;
+        //             word2Idx = pairs[j].second;
+        //         }
+        //     }
+        //     curDis += max(word1.size()-1-word1Idx, word2.size()-1-word2Idx);
+        //     ans = min(ans, curDis);
+        // }
+
+        findValidPairs(pairs, 0, -1, -1, curPath, curLCSLen, word1.size(), word2.size(), ans);
+
+        
+        if (ans == INT_MAX) return max(word1.size(), word2.size());
+
+        // int LCSLen = validPairs[validPairs.size()-1].size();
+        // int curDis;
+
+        // for (int i=validPairs.size()-1; i>=0; i--) {
+        //     int pathLen = validPairs[i].size();
+        //     if (pathLen < LCSLen-1) break;
+        //     curDis = max(validPairs[i][0].first, validPairs[i][0].second);
+        //     for (int j=1; j<pathLen; j++) {
+        //         curDis += max(validPairs[i][j].first-validPairs[i][j-1].first-1, validPairs[i][j].second-validPairs[i][j-1].second-1);
+        //     }
+        //     curDis += max(word1.size()-1-validPairs[i][pathLen-1].first, word2.size()-1-validPairs[i][pathLen-1].second);
+
+        //     if (curDis < ans) ans = curDis;
+        // }
 
 
         return ans;
@@ -185,8 +212,10 @@ public:
 
 int main() {
     Solution solution;
-    string word1 = "pneumonoultramicroscopicsilicovolcanoconiosis";
-    string word2 = "ultramicroscopical";
+    // string word1 = "pneumonoultramicroscopicsilicovolcanoconiosis";
+    // string word2 = "ultramicroscopical";
+    string word1 = "horse";
+    string word2 = "ros";
 
     int ans = solution.minDistance(word1, word2);
 
