@@ -1,11 +1,14 @@
 #include <omp.h>
 #include <chrono>
 #include <iostream>
+#include <numeric>
+#include <vector>
 
 long sumSerial(int n) {
     long sum = 0;
 
     for (int i=1; i<=n; i++) sum += i;
+    
 
     return sum;
 }
@@ -14,12 +17,21 @@ long sumParallel(int n) {
     long sum = 0;
 
     #pragma omp parallel for reduction(+ : sum) num_threads(6)
-    for (int i=1; i<=n; i++) sum += i;
-
+    for (int i=1; i<=n; i++) {
+        sum += i;
+    }
     return sum;
 }
 
+void test_reduce() {
+    std::vector<int> v = {2, 3, 8, 9, 11};
+    int sum = std::reduce(v.begin(), v.end());
+
+    return;
+}
+
 int main() {
+    // test_reduce();
     const int n = 1000000000;
 
     auto startTime = std::chrono::high_resolution_clock::now();
