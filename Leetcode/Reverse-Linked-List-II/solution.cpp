@@ -25,9 +25,26 @@ public:
     }
 };
 
+void revers(ListNode *head,ListNode **newhead){
+    if(head -> next == nullptr){
+        *newhead = head;
+        return ;
+    }
+    revers(head -> next , newhead);
+
+    head->next->next = head;
+    head->next = nullptr;
+    return ;
+}
+
 int main() {
     Solution solution;
     ListNode* head = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))));
 
-    ListNode* ans = solution.reverseBetween(head, 1, 5);
+    // ListNode* ans = solution.reverseBetween(head, 1, 5);
+
+    ListNode* newhead;
+    revers(head, &newhead);
+
+    return 0;
 }

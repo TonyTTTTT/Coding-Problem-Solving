@@ -5,8 +5,8 @@ int test() {
     return puts("Hello World");
 }
 
-void wrapper(int (*func)()) {
-    func();
+int wrapper(int (*func)(int, int), int a, int b) {
+    return func(a, b);
 }
 
 int main() {
@@ -18,7 +18,7 @@ int main() {
 
     int (*fptr)(int, int) = &add;
 
-    wrapper(test);
+    printf("additoin result: %d\n", wrapper(fptr, 3, 6));
 
     return 0;
 }
