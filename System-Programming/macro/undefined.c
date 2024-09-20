@@ -3,7 +3,7 @@
 
 int func(int a){
     int m = 3;
-#ifdef VAR
+#ifndef VAR
 #define VAR 10
     m = 4;
 #endif
