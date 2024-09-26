@@ -8,7 +8,7 @@ void inf_loop(std::string s) {
 
 int main() {
     std::thread t1(inf_loop, "dog");
-    std::thread t2(inf_loop, "pig");
+    // std::thread t2(inf_loop, "pig");
 
     inf_loop("cat");
 
