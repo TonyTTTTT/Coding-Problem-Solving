@@ -7,5 +7,9 @@ int main() {
 
     change(&b);
 
+    int a[10] = {1,2,3,4,5,6,7,8,9,10};
+
+    int *p = &(a+1)[3];
+
     return 0;
 }
