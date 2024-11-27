@@ -13,10 +13,10 @@ int main() {
 void change(int **a, int len) {
     int *new = (int*)malloc(sizeof(int) * len);
 
-    for (int i=0; i<len; i++) {
-        new[i] = (*a)[i] + 1;
-    }
-    *a = new;
+    // for (int i=0; i<len; i++) {
+    //     new[i] = (*a)[i] + 1;
+    // }
+    // *a = new;
 
     // for (int i=0; i<len; i++) {
     //     a[i]++;
